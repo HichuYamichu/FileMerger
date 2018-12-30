@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
+using Xceed.Words.NET;
 
 namespace files
 {
@@ -18,10 +20,16 @@ namespace files
 
             try
             {
-                StreamWriter sw = File.CreateText(pathForFile + @"\output.txt");
-                sw.Close();
 
-                string[] filePaths = Directory.GetFiles(@directoryPath);
+                var doc = DocX.Create(pathForFile + @"\output.docx");
+
+                Formatting titleFormat = new Formatting();
+                titleFormat.FontFamily = new Font("Calibri");
+                titleFormat.Size = 18D;
+                titleFormat.Position = 40;
+                titleFormat.Italic = true;
+
+                string[] filePaths = Directory.GetFiles(@directoryPath, "*.html");
 
                 foreach (var file in filePaths)
                 {
@@ -29,25 +37,26 @@ namespace files
 
                     List<string> lines = File.ReadAllLines(file).ToList();
 
-                    var tw = new StreamWriter(pathForFile + @"\output.txt", true);
-                    tw.WriteLine(file + Environment.NewLine);
+                    Paragraph paragraphTitle = doc.InsertParagraph(file, false, titleFormat);
+                    paragraphTitle.Alignment = Alignment.center;
 
                     foreach (string line in lines)
                     {
-                        tw.WriteLine(line);
+                        doc.InsertParagraph(line);
+
                         Console.WriteLine(line);
                     }
 
-                    tw.WriteLine(Environment.NewLine);
-                    tw.Close();
+                    doc.InsertParagraph(Environment.NewLine);
 
                 }
+                doc.Save();
             }
             catch(Exception e)
             {
                 Console.WriteLine(e);
             }
-
+            Process.Start("WINWORD.EXE", pathForFile + @"\output.docx");
             Console.ReadLine();
         }
     }
