@@ -18,6 +18,28 @@ namespace files
             Console.WriteLine("Enter directory path");
             string directoryPath = Console.ReadLine();
 
+            switch(pathForFile){
+                case "Desktop":
+                    pathForFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    break;
+
+                case "Documents":
+                    pathForFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    break;
+            }
+
+            switch (directoryPath)
+            {
+                case "Desktop":
+                    directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    break;
+
+                case "Documents":
+                    directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    break;
+            }
+
+
             try
             {
 
